@@ -1,14 +1,17 @@
 import { useState } from 'react'
-import './App.css'
-import { Textarea } from '@chakra-ui/react'
+import classes from './App.module.css'
+import { Button, Input, Textarea } from '@chakra-ui/react'
 
 function App() {
   const [text, setText] = useState("");
 
   return (
-    <div className="mainContainer">
+    <div className={classes.mainContainer}>
       <h1>MTG Playtest Card Creator</h1>
-      <Textarea placeholder='Here is a sample placeholder' onChange={(x)=>setText(x.target.value)} />
+      <Textarea  maxW="90%" width="60ch" placeholder='Here is a sample placeholder' onChange={(x)=>setText(x.target.value)} />
+      <div>
+        <Button>Add Cards</Button> or <Input placeholder="Shivan Dragon"></Input>
+      </div>
       <div>Hello{!!text  ? ` ${text}` : "" }!</div>
     </div>
   )
