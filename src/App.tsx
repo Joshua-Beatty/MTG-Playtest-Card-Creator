@@ -2,9 +2,10 @@ import { useState } from 'react'
 import './App.css'
 import { Button, Input, Textarea } from '@chakra-ui/react'
 import debounce from "lodash/debounce"
-import CardSearchDisplay from './CardSearchDisplay';
-import CardSearch from './CardSearch';
+import CardSearchDisplay from './Components/CardSearch/CardSearchDisplay';
+import CardSearch from './Components/CardSearch/CardSearch';
 import { Card } from 'scryfall-api';
+import CardDisplay from './Components/CardDisplay/CardDisplay';
 const placeholder = `4 Apex Altisaur
 3 Bala Ged Recovery // Bala Ged Sanctuary
 3 Beast Within
@@ -21,7 +22,7 @@ function App() {
   const [text, setText] = useState("");
   const [deck, setDeck] = useState([] as {card: Card, count: number}[]);
   function addCardCallback(card: Card){
-    setDeck([{card: card, count: 0}, ...deck])
+    setDeck([{card: card, count: 1}, ...deck])
   }
 
   return (
@@ -32,7 +33,7 @@ function App() {
       <div className="addHolder">
         <Button width="20%" minW="15ch">Add Cards</Button> or <CardSearch addCardCallback={addCardCallback}/>
       </div>
-      
+      <CardDisplay cards={deck} updateCardsCallBack={(x)=>{setDeck([...x])}}/>
       
       </div>
       <footer>

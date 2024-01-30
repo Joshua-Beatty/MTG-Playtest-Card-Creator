@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 //import './App.css'
 import { Box, Button, ButtonGroup, Input, Textarea } from '@chakra-ui/react'
-import client from './client';
+import client from '../../tools/client';
 import useSWR from 'swr'
 import { Card } from 'scryfall-api';
 import { distance } from "fastest-levenshtein"
 import debounce from 'lodash/debounce';
 import CardSearchDisplay from './CardSearchDisplay';
-import debounceRender from "react-debounce-render";
 
 function CardSearch(props: {
     addCardCallback: (card: Card) => void
