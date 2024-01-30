@@ -42,7 +42,7 @@ function CardSearchDisplay(props: CardSearchDisplayProps) {
             cardList.map(x => <Button
               key={x.id}
               onMouseOut={() => { setHoverLink("") }}
-              onMouseOver={() => { setHoverLink(x?.image_uris?.large || "") }}
+              onMouseOver={() => { setHoverLink(x?.image_uris?.large || x?.card_faces?.[0]?.image_uris?.large || "") }}
               onClick={() => { console.log("hi"); props.addCardCallback(x) }}
               width="100%">{x.name}</Button>)
           }
