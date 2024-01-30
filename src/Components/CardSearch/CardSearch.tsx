@@ -9,7 +9,8 @@ import debounce from 'lodash/debounce';
 import CardSearchDisplay from './CardSearchDisplay';
 
 function CardSearch(props: {
-    addCardCallback: (card: Card) => void
+    addCardCallback: (card: Card) => void,
+    isDisabled: boolean
 }) {
     const [cardSearch, setcardSearch] = useState("");
     const [value, setValue] = useState("");
@@ -34,7 +35,7 @@ function CardSearch(props: {
 
     return (
         <div>
-        <Input width="40vw" maxW="300px" ref={ref} value={value} onFocus={()=>{setFocused(true)}} onBlur={(e)=>{if(e.relatedTarget){} else setFocused(false) }} onChange={(x) => {setValue(x.target.value); cardSearchChanged(x.target.value)}} placeholder="Search a card by name"></Input>
+        <Input isDisabled={props.isDisabled} width="40vw" maxW="300px" ref={ref} value={value} onFocus={()=>{setFocused(true)}} onBlur={(e)=>{if(e.relatedTarget){} else setFocused(false) }} onChange={(x) => {setValue(x.target.value); cardSearchChanged(x.target.value)}} placeholder="Search a card by name"></Input>
         { focused ? <CardSearchDisplay searchText={cardSearch} addCardCallback={addCardCallback}/> : null}
         </div>
     )

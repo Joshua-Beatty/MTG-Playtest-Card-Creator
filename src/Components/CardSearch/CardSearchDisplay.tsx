@@ -15,7 +15,7 @@ function CardSearchDisplay(props: CardSearchDisplayProps) {
 
   const [hoverLink, setHoverLink] = useState("");
 
-  const { data, error, isLoading } = useSWR(`/cards/search?include_extras=true&q=${encodeURIComponent(props.searchText)}`, async (url) => {
+  const { data, error, isLoading } = useSWR(`/cards/search?include_extras=true&q=${encodeURIComponent("-layout:art-series " + props.searchText)}`, async (url) => {
     if (!props.searchText)
       return null;
     const { data } = await client.get(url);

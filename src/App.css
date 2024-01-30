@@ -5,7 +5,7 @@
 }
 
 .mainContainer > * {
-  width: min(100% - 4rem, 120ch);
+  width: min(100% - 4rem, 160ch);
   margin-inline: auto;
 }
 
