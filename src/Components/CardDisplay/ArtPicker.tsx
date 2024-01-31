@@ -5,7 +5,7 @@ import { Spinner, Image } from "@chakra-ui/react";
 
 
 
-function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: Card) => any, setCode: string }) {
+function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: Card) => unknown, setCode: string }) {
 
     const { data, error, isLoading } = useSWR(`/cards/search?include_extras=true&unique=prints&order=released&is=highres&q=${encodeURIComponent(`-layout:art-series ${props.setCode ? `set:${props.setCode}` : ""} !"${props.cardName}"`)}`, async (url) => {
         if (!props.cardName)
@@ -14,19 +14,22 @@ function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: C
         return data
     })
 
-    
+
 
 
     if (isLoading) {
         return (<Spinner />)
     }
+    if (error) {
+        return (<div style={{marginTop: "10px"}}> No prints found</div>)
+    }
 
     return (
         <div>
             <div style={{ fontSize: "13px", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "1%" }}>
-                <div style={{ width: "18%", border: "solid lime 1px", margin: "5px" }}>
-                    {props.card.set_name} {`(${props.card.set.toLocaleUpperCase()})`}
-                    <Image src={props.card?.image_uris?.large || props.card?.card_faces?.[0]?.image_uris?.large} />
+                <div style={{ width: "18%", margin: "5px" }}>
+                    <div style={{ height: "2lh", display: "flex", alignItems: "flex-end" }}>{props.card.set_name} {`(${props.card.set.toLocaleUpperCase()})`}</div>
+                    <Image style={{ border: "solid lime 1px" }} src={props.card?.image_uris?.large || props.card?.card_faces?.[0]?.image_uris?.large} />
                     {props.card?.card_faces?.[0]?.image_uris ?
                         <div style={{ height: 0 }}><Image style={{
                             position: "relative",
@@ -40,7 +43,7 @@ function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: C
                 {data?.data?.map((x: Card) => {
                     return (
                         <div style={{ width: "18%", margin: "5px" }}>
-                            {x.set_name} {`(${x.set.toLocaleUpperCase()})`}
+                            <div style={{ height: "2lh", display: "flex", alignItems: "flex-end" }}>{x.set_name} {`(${x.set.toLocaleUpperCase()})`}</div>
                             <Image style={{ cursor: "pointer" }} src={x?.image_uris?.large || x?.card_faces?.[0]?.image_uris?.large} onClick={() => {
                                 props.setNewArt(x);
                             }} />

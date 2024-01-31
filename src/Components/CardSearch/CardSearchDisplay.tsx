@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 //import './App.css'
-import { Box, Button, ButtonGroup, Image, Textarea } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, Image } from '@chakra-ui/react'
 import client from '../../tools/client';
 import useSWR from 'swr'
 import { Card } from 'scryfall-api';

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Button, IconButton, Image, Input, Textarea, ButtonGroup, Select, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
-import { Card, Cards } from 'scryfall-api';
+import { IconButton, Image, Input, ButtonGroup, Select, useDisclosure, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Card } from 'scryfall-api';
 import "./cardDisplay.css"
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
@@ -64,6 +64,7 @@ function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck)
           </div>
           <Image style={{cursor: "pointer"}} src={x.card?.image_uris?.large || x.card?.card_faces?.[0]?.image_uris?.large} onClick={() => {
             setCardInfo({ name: x.card.name, index: i })
+            setSetCode("")
             onOpen();
           }}></Image>
           {

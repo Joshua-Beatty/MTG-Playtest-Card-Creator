@@ -3,10 +3,9 @@ import client from "./client";
 import { Deck } from "./types";
 import chunk from "lodash/chunk";
 import { v4 } from "uuid";
-import { TbUserEdit } from "react-icons/tb";
 
 const format = /\d+ .+/
-async function processDeckList(deckList: string, setErrors: (erros: string[]) => any, setLoading: (state: boolean) => any, newDataCallBack: (deck: Deck) => any) {
+async function processDeckList(deckList: string, setErrors: (erros: string[]) => unknown, setLoading: (state: boolean) => unknown, newDataCallBack: (deck: Deck) => unknown) {
     setLoading(true);
     const errors: string[] = [];
     const Deck: Deck = [];
@@ -42,7 +41,7 @@ async function processDeckList(deckList: string, setErrors: (erros: string[]) =>
         }
 
         for (const card of data.data as Card[]) {
-            let count = chunk.find((x) => card.name.includes(x.name))?.count || 1;
+            const count = chunk.find((x) => card.name.includes(x.name))?.count || 1;
             Deck.push({
                 card,
                 count,

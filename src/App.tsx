@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import './App.css'
-import { Button, Input, Spinner, Textarea, useToast } from '@chakra-ui/react'
-import debounce from "lodash/debounce"
-import CardSearchDisplay from './Components/CardSearch/CardSearchDisplay';
+import { Button, Progress, Spinner, Textarea, useToast } from '@chakra-ui/react'
 import CardSearch from './Components/CardSearch/CardSearch';
 import { Card } from 'scryfall-api';
 import CardDisplay from './Components/CardDisplay/CardDisplay';
 import { Deck } from './tools/types';
 import { v4 as uuidv4 } from "uuid"
 import processDeckList from './tools/processDeckList';
+import printDeck from './tools/printDeck';
 const placeholder = `4 Apex Altisaur
 3 Bala Ged Recovery // Bala Ged Sanctuary
 3 Beast Within
@@ -25,15 +24,15 @@ function App() {
   const [deckList, setdeckList] = useState("");
   const [deck, setDeck] = useState([] as Deck);
   const [loading, setLoading] = useState<boolean>(false);
-  const [errors, setErrors] = useState([] as string[]);
+  const [printing, setPrinting] = useState<boolean>(false);
+  const [progress, setProgress] = useState({ p: 0, t: 1 });
+
   function addCardCallback(card: Card) {
     setDeck([{ card: card, count: 1, uuid: uuidv4() }, ...deck])
   }
 
 
   const toast = useToast()
-
-
   function addDecklist() {
     processDeckList(deckList, (errors: string[]) => {
       if (errors.length > 0)
@@ -61,11 +60,13 @@ function App() {
           <Button colorScheme='yellow' isDisabled={loading} width="15%" minW="15ch" onClick={addDecklist}>Add Cards</Button> or <CardSearch isDisabled={loading} addCardCallback={addCardCallback} />
           {loading ? <Spinner /> : null}
         </div>
-        <Button width="20%" minW="15ch"  isDisabled={loading} onClick={() => { setDeck([]) }}>Remove All Cards</Button>
-        
-        <Button marginLeft={"20px"}  isDisabled={loading} width="10%" minW="15ch" >Print</Button>
+        <Button width="20%" minW="15ch" isDisabled={loading} onClick={() => { setDeck([]) }}>Remove All Cards</Button>
 
-        {errors.length > 0 ? errors.map(x => <p>{x}</p>) : null}
+        <Button marginLeft={"20px"} isDisabled={loading} width="10%" minW="15ch" onClick={() => printDeck((x) => { setLoading(x); setPrinting(x) }, deck, (p, t) => { setProgress({ p, t }); })}>Print</Button>
+        {
+          printing && progress.t ? <Progress marginTop="10px" value={progress.p / progress.t * 100} /> : null
+        }
+
         <CardDisplay cards={deck} updateCardsCallBack={(x) => { setDeck([...x]) }} />
       </div>
       <footer>

@@ -1,10 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
-//import './App.css'
-import { Box, Button, ButtonGroup, Input, Textarea } from '@chakra-ui/react'
-import client from '../../tools/client';
-import useSWR from 'swr'
+import { useRef, useState } from 'react'
+import { Input } from '@chakra-ui/react'
 import { Card } from 'scryfall-api';
-import { distance } from "fastest-levenshtein"
 import debounce from 'lodash/debounce';
 import CardSearchDisplay from './CardSearchDisplay';
 
@@ -15,6 +11,7 @@ function CardSearch(props: {
     const [cardSearch, setcardSearch] = useState("");
     const [value, setValue] = useState("");
     const [focused, setFocused] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ref = useRef<any>(null);
 
     const [cardSearchChanged] = useState(() => {
@@ -35,7 +32,7 @@ function CardSearch(props: {
 
     return (
         <div>
-        <Input isDisabled={props.isDisabled} width="40vw" maxW="300px" ref={ref} value={value} onFocus={()=>{setFocused(true)}} onBlur={(e)=>{if(e.relatedTarget){} else setFocused(false) }} onChange={(x) => {setValue(x.target.value); cardSearchChanged(x.target.value)}} placeholder="Search a card by name"></Input>
+        <Input isDisabled={props.isDisabled} width="40vw" maxW="300px" ref={ref} value={value} onFocus={()=>{setFocused(true)}} onBlur={(e)=>{if(!e.relatedTarget) setFocused(false) }} onChange={(x) => {setValue(x.target.value); cardSearchChanged(x.target.value)}} placeholder="Search a card by name"></Input>
         { focused ? <CardSearchDisplay searchText={cardSearch} addCardCallback={addCardCallback}/> : null}
         </div>
     )
