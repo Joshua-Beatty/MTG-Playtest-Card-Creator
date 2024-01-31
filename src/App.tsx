@@ -66,7 +66,16 @@ function App() {
       <div className="content">
        
         <div style={{display: !matches ?  "block" : "flex", margin: "5px", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
-          <h1 style={{ display: "inline" }}>MTG Playtest Card Creator</h1>  <br/><Button width="20%" minW="17ch" isDisabled={loading} onClick={() => { setdeckList(exampleDecklist) }}>Load Example Deck</Button>
+          <h1 style={{ display: "inline" }}>MTG Playtest Card Creator</h1>  <br/><Button width="20%" minW="17ch" isDisabled={loading} onClick={() => { 
+            setdeckList(exampleDecklist)
+            toast({
+              title: 'Click Add Cards!',
+              description: "",
+              status: "info",
+              duration: 1000,
+              isClosable: true,
+            })
+             }}>Load Example Deck</Button>
         </div>
 
         <Textarea width="100%" minH="25ch" value={deckList} placeholder={placeholder} isDisabled={loading} onChange={(x) => setdeckList(x.target.value)} />
