@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { Button, Progress, Spinner, Textarea, useToast } from '@chakra-ui/react'
 import CardSearch from './Components/CardSearch/CardSearch';
@@ -27,11 +27,20 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [printing, setPrinting] = useState<boolean>(false);
   const [progress, setProgress] = useState({ p: 0, t: 1 });
+  
+  const [matches, setMatches] = useState(
+    window.matchMedia("(min-width: 500px)").matches
+  )
 
   function addCardCallback(card: Card) {
     setDeck([{ card: card, count: 1, uuid: uuidv4() }, ...deck])
   }
 
+  useEffect(() => {
+    window
+    .matchMedia("(min-width: 768px)")
+    .addEventListener('change', e => setMatches( e.matches ));
+  }, []);
 
   const toast = useToast()
   function addDecklist() {
@@ -55,9 +64,11 @@ function App() {
   return (
     <div className="mainContainer">
       <div className="content">
-        <div style={{display:"flex", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
-          <h1 style={{ display: "inline" }}>MTG Playtest Card Creator</h1>  <Button width="20%" minW="15ch" isDisabled={loading} onClick={() => { setdeckList(exampleDecklist) }}>Load Example Deck</Button>
+       
+        <div style={{display: !matches ?  "block" : "flex", margin: "5px", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
+          <h1 style={{ display: "inline" }}>MTG Playtest Card Creator</h1>  <br/><Button width="20%" minW="17ch" isDisabled={loading} onClick={() => { setdeckList(exampleDecklist) }}>Load Example Deck</Button>
         </div>
+
         <Textarea width="100%" minH="25ch" value={deckList} placeholder={placeholder} isDisabled={loading} onChange={(x) => setdeckList(x.target.value)} />
         <div className="addHolder">
           <Button colorScheme='yellow' isDisabled={loading} width="15%" minW="15ch" onClick={addDecklist}>Add Cards</Button> or <CardSearch isDisabled={loading} addCardCallback={addCardCallback} />

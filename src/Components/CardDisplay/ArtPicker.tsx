@@ -2,7 +2,7 @@ import { Card } from "scryfall-api";
 import useSWR from "swr";
 import client from "../../tools/client";
 import { Spinner, Image } from "@chakra-ui/react";
-
+import "./ArtPicker.css"
 
 
 function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: Card) => unknown, setCode: string }) {
@@ -27,7 +27,7 @@ function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: C
     return (
         <div>
             <div style={{ fontSize: "13px", display: "flex", flexDirection: "row", flexWrap: "wrap", gap: "1%" }}>
-                <div style={{ width: "18%", margin: "5px" }}>
+                <div style={{ margin: "5px" }} className="cardHolder">
                     <div style={{ height: "2lh", display: "flex", alignItems: "flex-end" }}>{props.card.set_name} {`(${props.card.set.toLocaleUpperCase()})`}</div>
                     <Image style={{ border: "solid lime 1px" }} src={props.card?.image_uris?.large || props.card?.card_faces?.[0]?.image_uris?.large} />
                     {props.card?.card_faces?.[0]?.image_uris ?
@@ -42,7 +42,7 @@ function ArtPicker(props: { cardName: string, card: Card, setNewArt: (newCard: C
                 </div>
                 {data?.data?.map((x: Card) => {
                     return (
-                        <div style={{ width: "18%", margin: "5px" }}>
+                        <div style={{ margin: "5px" }}  className="cardHolder">
                             <div style={{ height: "2lh", display: "flex", alignItems: "flex-end" }}>{x.set_name} {`(${x.set.toLocaleUpperCase()})`}</div>
                             <Image style={{ cursor: "pointer" }} src={x?.image_uris?.large || x?.card_faces?.[0]?.image_uris?.large} onClick={() => {
                                 props.setNewArt(x);
