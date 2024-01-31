@@ -8,6 +8,7 @@ import { Deck } from './tools/types';
 import { v4 as uuidv4 } from "uuid"
 import processDeckList from './tools/processDeckList';
 import printDeck from './tools/printDeck';
+import exampleDecklist from './tools/exampleDecklist';
 const placeholder = `4 Apex Altisaur
 3 Bala Ged Recovery // Bala Ged Sanctuary
 3 Beast Within
@@ -54,8 +55,10 @@ function App() {
   return (
     <div className="mainContainer">
       <div className="content">
-        <h1>MTG Playtest Card Creator</h1>
-        <Textarea width="100%" minH="25ch" placeholder={placeholder} isDisabled={loading} onChange={(x) => setdeckList(x.target.value)} />
+        <div style={{display:"flex", flexDirection: "row", justifyContent:"space-between", alignItems: "center"}}>
+          <h1 style={{ display: "inline" }}>MTG Playtest Card Creator</h1>  <Button width="20%" minW="15ch" isDisabled={loading} onClick={() => { setdeckList(exampleDecklist) }}>Load Example Deck</Button>
+        </div>
+        <Textarea width="100%" minH="25ch" value={deckList} placeholder={placeholder} isDisabled={loading} onChange={(x) => setdeckList(x.target.value)} />
         <div className="addHolder">
           <Button colorScheme='yellow' isDisabled={loading} width="15%" minW="15ch" onClick={addDecklist}>Add Cards</Button> or <CardSearch isDisabled={loading} addCardCallback={addCardCallback} />
           {loading ? <Spinner /> : null}
