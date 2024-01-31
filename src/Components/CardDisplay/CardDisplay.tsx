@@ -7,7 +7,7 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { Deck } from '../../tools/types';
 import ArtPicker from './ArtPicker';
 import debounce from 'lodash/debounce';
-function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck) => void }) {
+function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck) => void, isDisabled: boolean }) {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [cardInfo, setCardInfo] = useState({ index: -1, name: "" })
   const [setCode, setSetCode] = useState("")
@@ -31,7 +31,7 @@ function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck)
 
               {
                 x.card?.card_faces?.[0]?.image_uris ?
-                  <Select size='xs' width="fit-content" value={x.faces || ""} onChange={(x) => {
+                  <Select  isDisabled={props.isDisabled}  size='xs' width="fit-content" value={x.faces || ""} onChange={(x) => {
                     props.cards[i].faces = x.target.value as "front" | "back"
                     if (!x.target.value)
                       delete props.cards[i].faces
@@ -46,7 +46,7 @@ function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck)
             </div>
 
 
-            <ButtonGroup padding="7px" >
+            <ButtonGroup  isDisabled={props.isDisabled}  padding="7px" >
               <IconButton aria-label='Search database' icon={<FaPlus />} fontSize='20px' onClick={() => {
                 props.cards[i].count++;
                 props.updateCardsCallBack(props.cards);
@@ -62,7 +62,9 @@ function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck)
               }} />
             </ButtonGroup>
           </div>
-          <Image style={{cursor: "pointer"}} src={x.card?.image_uris?.large || x.card?.card_faces?.[0]?.image_uris?.large} onClick={() => {
+          <Image  style={{cursor: props.isDisabled ? "" : "pointer"}} src={x.card?.image_uris?.large || x.card?.card_faces?.[0]?.image_uris?.large} onClick={() => {
+            if(props.isDisabled)
+              return;
             setCardInfo({ name: x.card.name, index: i })
             setSetCode("")
             onOpen();

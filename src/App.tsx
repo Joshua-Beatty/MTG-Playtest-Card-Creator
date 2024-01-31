@@ -70,7 +70,7 @@ function App() {
           printing && progress.t ? <Progress marginTop="10px" value={progress.p / progress.t * 100} /> : null
         }
 
-        <CardDisplay cards={deck} updateCardsCallBack={(x) => { setDeck([...x]) }} />
+        <CardDisplay isDisabled={loading} cards={deck} updateCardsCallBack={(x) => { setDeck([...x]) }} />
       </div>
       <footer>
         <p>
