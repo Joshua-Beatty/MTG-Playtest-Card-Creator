@@ -7,7 +7,8 @@ import { Card } from 'scryfall-api';
 import { distance } from "fastest-levenshtein"
 interface CardSearchDisplayProps {
   searchText: string,
-  addCardCallback: (card: Card) => void
+  addCardCallback: (card: Card) => void,
+  enterClicked: boolean
 }
 
 
@@ -18,6 +19,8 @@ function CardSearchDisplay(props: CardSearchDisplayProps) {
   const { data, error, isLoading } = useSWR(`/cards/search?include_extras=true&q=${encodeURIComponent("-layout:art-series " + props.searchText)}`, async (url) => {
     if (!props.searchText)
       return null;
+
+    setHoverLink("");
     const { data } = await client.get(url);
     return data
   })
@@ -32,6 +35,10 @@ function CardSearchDisplay(props: CardSearchDisplayProps) {
   const cardList = cardData.sort((a, b) => distance(a.name, props.searchText) - distance(b.name, props.searchText)).slice(0, 15)
 
 
+  if(props.enterClicked){
+    setHoverLink("");
+    props.addCardCallback(cardList[0]); 
+  }
 
   return (
     <div style={{ position: "absolute", display: 'flex', zIndex: 99 }}>
@@ -43,7 +50,7 @@ function CardSearchDisplay(props: CardSearchDisplayProps) {
               key={x.id}
               onMouseOut={() => { setHoverLink("") }}
               onMouseOver={() => { setHoverLink(x?.image_uris?.large || x?.card_faces?.[0]?.image_uris?.large || "") }}
-              onClick={() => { console.log("hi"); props.addCardCallback(x) }}
+              onClick={() => { setHoverLink(""); props.addCardCallback(x) }}
               width="100%">{x.name}</Button>)
           }
         </ButtonGroup>
