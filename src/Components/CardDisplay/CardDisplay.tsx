@@ -27,35 +27,10 @@ function CardDisplay(props: { cards: Deck, updateCardsCallBack: (newCards: Deck)
 
           <div style={{ display: "flex", alignItems: "center" }}>
             <div style={{ marginRight: "auto" }}>
-              <p> Quantity: {x.count} </p>
-
-              {
-                x.card?.card_faces?.[0]?.image_uris ?
-                  <Select  isDisabled={props.isDisabled}  size='xs' width="fit-content" value={x.faces || ""} onChange={(x) => {
-                    props.cards[i].faces = x.target.value as "front" | "back"
-                    if (!x.target.value)
-                      delete props.cards[i].faces
-                    props.updateCardsCallBack(props.cards);
-                  }}>
-                    <option value=''>Both Faces</option>
-                    <option value='front'>Front Only</option>
-                    <option value='back'>Back Only</option>
-                  </Select>
-                  : null
-              }
             </div>
 
 
             <ButtonGroup  isDisabled={props.isDisabled}  padding="7px" >
-              <IconButton aria-label='Search database' icon={<FaPlus />} fontSize='20px' onClick={() => {
-                props.cards[i].count++;
-                props.updateCardsCallBack(props.cards);
-              }} />
-              <IconButton aria-label='Search database' icon={<FaMinus />} fontSize='20px' onClick={() => {
-                props.cards[i].count--;
-                if (props.cards[i].count == 0) { props.cards[i].count = 1; return; }
-                props.updateCardsCallBack(props.cards);
-              }} />
               <IconButton aria-label='Search database' icon={<FaRegTrashCan />} fontSize='20px' onClick={() => {
                 props.cards.splice(i, 1)
                 props.updateCardsCallBack(props.cards);

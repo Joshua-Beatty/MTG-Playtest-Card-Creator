@@ -41,7 +41,7 @@ async function processDeckList(deckList: string, setErrors: (erros: string[]) =>
         }
 
         for (const card of data.data as Card[]) {
-            const count = chunk.find((x) => card.name.includes(x.name))?.count || 1;
+            const count = 1;
             Deck.push({
                 card,
                 count,
