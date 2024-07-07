@@ -86,8 +86,9 @@ async function cropImageBitmap(imageBitmap: ImageBitmap, useMask: boolean, card:
     let mask = Mask
 
     if(card.frame_effects?.includes("legendary")){
-        cropY = 38
-        mask = Mask_legendary
+        // cropY = 42  
+        // cropHeight = 62
+        // mask = Mask_legendary
     }
 
     const data = await (await fetch(mask)).blob()
