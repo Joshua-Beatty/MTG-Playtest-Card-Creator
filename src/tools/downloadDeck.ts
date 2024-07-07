@@ -2,16 +2,22 @@ import chunk from "lodash/chunk";
 import { Deck } from "./types";
 import { jsPDF } from "jspdf";
 import Mask from "../Assets/Mask.png"
+import Mask_legendary from "../Assets/Mask_legendary.png"
 import JSZip from "jszip";
 import { Image } from "pdfjs";
+import { Card } from "scryfall-api";
 async function downloadDeck(setLoading: (state: boolean) => unknown, deck: Deck, setProgress: (progress: number, total: number) => unknown, useMask: boolean) {
     setLoading(true);
     setProgress(0, 100);
 
     const toPrintImages: string[] = [];
     const toPrintImagesName: string[] = [];
+    const toPrintCardObjects: Card[] = [];
     for (const card of deck) {
         toPrintImagesName.push(card.card.name)
+        toPrintImages.push(`https://scryfallimagedownloader.joshuatb6.workers.dev/?id=${card.card.id}`)
+        toPrintCardObjects.push(card.card)
+        continue;
         for (let i = 0; i < card.count; i++) {
             if (card.card?.card_faces?.[0]?.image_uris) {
                 if (!card.faces) {
@@ -30,9 +36,10 @@ async function downloadDeck(setLoading: (state: boolean) => unknown, deck: Deck,
     let count = 0
     for (const index in toPrintImages) {
         const cardURL = toPrintImages[index]
+        const card = toPrintCardObjects[index]
         const data = await (await fetch(cardURL)).blob()
         let imageBitmap = await createImageBitmap(data)
-        imageBitmap = await cropImageBitmap(imageBitmap, useMask)
+        imageBitmap = await cropImageBitmap(imageBitmap, useMask, card)
 
 
         zip.file(sanitizeFileName(`${toPrintImagesName[index]}.png`), imageBitmapToBlob(imageBitmap));
@@ -70,14 +77,20 @@ function sanitizeFileName(fileName: string) {
     return fileName.replace(/[^a-z0-9.\-_]/gi, '_');
 }
 
-async function cropImageBitmap(imageBitmap: ImageBitmap, useMask: boolean) {
+async function cropImageBitmap(imageBitmap: ImageBitmap, useMask: boolean, card: Card) {
     // Dimensions of the crop area
-    const cropWidth = 603;
-    const cropHeight = 63;
-    const cropX = 34;
-    const cropY = 40;
+    let cropWidth = 603;
+    let cropHeight = 63;
+    let cropX = 34;
+    let cropY = 40;
+    let mask = Mask
 
-    const data = await (await fetch(Mask)).blob()
+    if(card.frame_effects?.includes("legendary")){
+        cropY = 38
+        mask = Mask_legendary
+    }
+
+    const data = await (await fetch(mask)).blob()
     const maskImage = await createImageBitmap(data);
     // Create an off-screen canvas
     const offscreenCanvas = new OffscreenCanvas(cropWidth, cropHeight);
