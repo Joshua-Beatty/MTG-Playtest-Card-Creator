@@ -1,10 +1,6 @@
-import chunk from "lodash/chunk";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Deck } from "./types";
-import { jsPDF } from "jspdf";
 import Mask from "../Assets/Mask.png"
-import Mask_legendary from "../Assets/Mask_legendary.png"
-import JSZip from "jszip";
-import { Image } from "pdfjs";
 import { Card } from "scryfall-api";
 async function downloadDeck(setLoading: (state: boolean) => unknown, deck: Deck, setProgress: (progress: number, total: number) => unknown, useMask: boolean) {
     setLoading(true);
@@ -31,6 +27,8 @@ async function downloadDeck(setLoading: (state: boolean) => unknown, deck: Deck,
                 toPrintImages.push(card.card.image_uris?.large || "");
         }
     }
+    
+    const { default: JSZip } = await import('jszip');
     const zip = new JSZip();
 
     let count = 0
