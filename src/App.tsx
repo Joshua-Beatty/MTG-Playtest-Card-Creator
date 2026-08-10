@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ChangeEvent } from 'react'
 import './App.css'
 import { Button, Progress, Spinner, Textarea, useToast } from '@chakra-ui/react'
 import CardSearch from './Components/CardSearch/CardSearch';
@@ -34,6 +34,42 @@ function App() {
 
   function addCardCallback(card: Card) {
     setDeck([{ card: card, count: 1, uuid: uuidv4() }, ...deck])
+  }
+
+  function handleCustomImageUpload(e: ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const readers = Array.from(files).map((file) => {
+      return new Promise<Deck[number]>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const customCard = {
+            name: file.name.replace(/\.[^/.]+$/, ""),
+            image_uris: { large: dataUrl, normal: dataUrl, png: dataUrl, small: dataUrl },
+          } as unknown as Card;
+          resolve({ card: customCard, count: 1, uuid: uuidv4() });
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(readers)
+      .then((newCards) => setDeck([...newCards, ...deck]))
+      .catch(() => {
+        toast({
+          title: 'Error',
+          description: 'Failed to read one or more image files.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      });
+
+    // reset so selecting the same file again re-triggers onChange
+    e.target.value = "";
   }
 
   useEffect(() => {
@@ -84,6 +120,19 @@ function App() {
           {loading ? <Spinner /> : null}
         </div>
         <Button width="20%" minW="15ch" isDisabled={loading} onClick={() => { setDeck([]) }}>Remove All Cards</Button>
+
+        <Button as="label" htmlFor="custom-image-input" colorScheme='teal' marginLeft={"20px"} isDisabled={loading} width="20%" minW="20ch" cursor="pointer">
+          Upload Custom Card Image
+          <input
+            id="custom-image-input"
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+            disabled={loading}
+            onChange={handleCustomImageUpload}
+          />
+        </Button>
 
         <Button marginLeft={"20px"} isDisabled={loading} width="10%" minW="15ch" onClick={() => printDeck((x) => { setLoading(x); setPrinting(x) }, deck, (p, t) => { setProgress({ p, t }); })}>Print</Button>
         {
